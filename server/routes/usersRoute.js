@@ -13,7 +13,8 @@ const {
 
 router.route('/signup').post(validationBody(loginSchema.authSchema), UserController.signUp);
 
-router.route('/signin').post(UserController.signIn);
+router.route('/signin')
+    .post( validationBody(loginSchema.authSchema), passport.authenticate('local', {session: false}), UserController.signIn);
 
 router.route('/secret')
     .get(passport.authenticate('jwt', {session: false}), UserController.secretData);

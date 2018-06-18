@@ -8,10 +8,11 @@ const validationBody = (loginSchema) => {
              return
         }
 
+        console.log(request.value);
         if (!request.value) { //if request.value is not there , then create a new object called request.value
             request.value = {};
         }
-
+        console.log(validateResult.value);
         request.value.body = validateResult.value; //  instead of writting the request.body, we will be writting request.value.body
         next();
 

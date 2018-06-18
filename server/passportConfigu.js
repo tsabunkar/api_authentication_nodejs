@@ -53,28 +53,41 @@ passport.use(new JwtStrategy({
 //using LocalStrategy in passport
 
 passport.use(new LocalStrategy({
-    usernameField: "email" //by default localStartegy will authenticate username and password, but instead of username we want to authenticate email property, soo need to specifiy
-
-}, async (email, password, done) => {
+    usernameField: "email" ,//by default localStartegy will authenticate username and password, but instead of username we want to authenticate email property, soo need to specifiy
+    passwordField : "password"
+}, async (username, password, done) => {
+   
+    console.log(username);
+    console.log(password);
     //find the user with the passed emailId
     //if not handle it, (invalid emailId)
     //if user is found, then check if the password is correct
     //if not handle it, (invalid password)
     //thus success, valid credentials , pass the user object
 
-    //find the user with the passed emailId
-    const userObj = await User.findOne({
-        email
-    })
-    //if not handle it, (invalid emailId)
-    if (!userObj) {
-        done(null, false)
-        return
+    try {
+        //find the user with the passed emailId
+        const userObj = await User.findOne({
+            username
+        })
+        //if not handle it, (invalid emailId)
+        if (!userObj) {
+            done(null, false)
+            return
+        }
+
+        //if user is found, then check if the password is correct
+        const isMatched = await userObj.isValidPassword(password);
+
+        //if not handle it, (invalid password)
+        if (!isMatched) { //password didn't match scenario
+            done(null, false)
+        }
+
+        //thus success, valid credentials , pass the user object
+        done(null, userObj);
+    } catch (err) {
+        done(err, false) //done callback fun returning false
     }
 
-
-
-    if (err) {
-        return done(err);
-    }
 }))

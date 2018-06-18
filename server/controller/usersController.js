@@ -59,8 +59,17 @@ var signUp = async (request, response, next) => {
 var signIn = async (request, response, next) => {
     //it will go to passport.js
     //we need to generate token here
+
     console.log('signIn fun is invoked');
+    //  console.log(request.user); 
+
+    const tokenValue = signedToken(request.user)
+    response.status(200).json({
+        tokenValue
+    })
 }
+
+
 var secretData = async (request, response, next) => {
     console.log('secretData fun is invoked');
     response.json({
