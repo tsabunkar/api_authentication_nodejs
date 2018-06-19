@@ -26,7 +26,7 @@ var signUp = async (request, response, next) => {
     const password = request.value.body.password;
 
     const foundUser = await User.findOne({ //wait here untill u finsh this task -> of finding the emai property from mongodb
-        email
+        "local.email": email
     })
     if (foundUser) { //check if the user with same emaiId present in the DB
         response.status(409).json({
@@ -37,8 +37,11 @@ var signUp = async (request, response, next) => {
 
 
     const newUserObj = new User({
-        email,
-        password
+        methodstosignup: 'local',
+        local: {
+            email,
+            password
+        }
     });
 
     await newUserObj.save(); // wait here, untill it the document is saved in the d.b
@@ -77,9 +80,18 @@ var secretData = async (request, response, next) => {
     })
 }
 
+var googleOAuth_SignIn = async (request, response, next) => {
+    console.log('googleOAuth_SignIn fun is invoked');
+    const tokenValue = signedToken(request.user)
+    response.status(200).json({
+        tokenValue
+    })
+}
+
 
 module.exports = {
     signUp,
     signIn,
-    secretData
+    secretData,
+    googleOAuth_SignIn
 }
