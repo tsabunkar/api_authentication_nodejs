@@ -4,6 +4,8 @@ const passport = require('passport'); //Passport is Express-compatible authentic
 const JwtStrategy = require('passport-jwt').Strategy; //A Passport strategy for authenticating with a JSON Web Token.
 const LocalStrategy = require('passport-local').Strategy; //Passport strategy for authenticating with a username and password.
 const  GooglePlusTokenStrategy = require('passport-google-plus-token');//Passport strategy for authenticating Google Plus account and OAuth 2.0 tokens.
+const FacebookTokenStrategy = require('passport-facebook-token');//Passport strategy for authenticating users using a Facebook account and OAuth 2.0 tokens. 
+
 
 const {
     ExtractJwt
@@ -99,15 +101,11 @@ passport.use(new LocalStrategy({
 
 //using googleStrategy in passport
 passport.use(new GooglePlusTokenStrategy({
-    clientID: '633736947972-d7fvf30rkr7an1dtl697i7urpv6ua9de.apps.googleusercontent.com',
-    clientSecret: 'h2FpYM70xLEieZ5Ft9mpSVrB'
+    clientID:  process.env.google_clientID,
+    clientSecret:  process.env.google_clientSecret
     //  passReqToCallback: true
 }, async (accessToken, refereshToken, profile, done) => {
     try{
- /*    console.log('accessToken', accessToken);
-    console.log('refereshToken', refereshToken); */
-    // console.log('profile',profile);
-
     //need to check this current user exist in the DB
     const exixtingUserInDb = await User.findOne({
       "google.googleId":  profile.id
@@ -132,6 +130,40 @@ passport.use(new GooglePlusTokenStrategy({
     done(null, newUserObj)
     }
     catch(err){
+        done(err, false) 
+    }
+}))
+
+//using facebookStrategy in passport
+passport.use(new FacebookTokenStrategy({
+    clientID: process.env.facebook_clientID,
+    clientSecret:   process.env.facebook_clientSecret
+}, async (accessToken, refereshToken, profile, done) => {
+    try{
+   
+        const exixtingUserInDb = await  await User.findOne({
+            "facebook.facebookId":  profile.id
+          });
+
+          if(exixtingUserInDb){
+            console.log('User already exist in our DB');
+            return  done(null, exixtingUserInDb);
+        }
+    
+        console.log('User doesnt exist in our DB,let us create a new user');
+        //if new account
+        const newUserObj = new User({
+            methodstosignup : 'facebook',
+            facebook : {
+                facebookId : profile.id,
+                email : profile.emails[0].value
+            }
+        });
+    
+        await newUserObj.save();
+        done(null, newUserObj);
+
+    }catch(error){
         done(err, false) 
     }
 }))

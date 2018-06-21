@@ -34,7 +34,7 @@ router.route('/secret')
 
 
 
-//http://localhost:3000/myusers/auth/google?access_token=<GOOGLE_TOKEN>
+//http://localhost:3000/myusers/oauth/google?access_token=<GOOGLE_TOKEN>
 //http://localhost:3000/myusers/oauth/google?access_token=ya29.GlvfBabdvPn5-bHjcOymxzWox1_2TnEgEA94NBn5QGof9UdNzf4zMyN5GuslvieNqZQ-fDOwK_Ug1meUdEQFsyFz-jTzOBrgIzHG_PgrTlBFhZsVjPUH913eLKQy
 /* router.route('/oauth/google')
     .get( passport.authenticate('google-plus-token', {session: false}) ); */
@@ -44,7 +44,12 @@ router.route('/oauth/google')
     }), UserController.googleOAuth_SignIn);
 
 
-
+// http://localhost:3000/myusers/oauth/facebook/token?access_token=<FACEBOOK_TOKEN>   
+// http://localhost:3000/myusers/oauth/facebook/token?access_token=EAAdYldokq30BAISmvRA6o477s79YA9AOYpsWbOh11LyXp1zYbmFFaXo6YxNOMjRhS7GfvirjkZBsJpaXVUXOPxVlVdZCbJUSXbNPpWZAkzGetT0CHzZBs3LIgIEdiPuXAyqIzJRE8RAK9wUPZC1HJXCEnFbqeuH4eiCJxIGMrzH2COy5eJA69ZBXAtRqTZCG7IZD
+    router.route('/oauth/facebook/token')
+    .post(passport.authenticate('facebook-token', { //facebook-token , is default keyword way to call googleStrategy
+        session: false
+    }), UserController.facebookOAuth_SignIn);
 
 
 

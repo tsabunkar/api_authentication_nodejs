@@ -89,9 +89,18 @@ var googleOAuth_SignIn = async (request, response, next) => {
 }
 
 
+var facebookOAuth_SignIn= async  (request, response, next) => {
+    console.log('facebookOAuth_SignIn fun is invoked');
+    const tokenValue = signedToken(request.user)
+    response.status(200).json({
+        tokenValue
+    })
+}
+
 module.exports = {
     signUp,
     signIn,
     secretData,
-    googleOAuth_SignIn
+    googleOAuth_SignIn,
+    facebookOAuth_SignIn
 }

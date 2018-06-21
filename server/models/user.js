@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({ //here these prop validation r done in two place->mongoose & Joi
     methodstosignup: { //it will tell us, what type of method used by end user to make his/her account ie- whether signedup using local authen, google authen or facebook authen
         type: String,
-        enum: ['local', 'google', 'faceebook'], //this methodstosignup can be either of this String value only
+        enum: ['local', 'google', 'facebook'], //this methodstosignup can be either of this String value only
         required: true
     },
     local: { //if user signed up using local authentication
