@@ -88,6 +88,7 @@ passport.use(new LocalStrategy({
         //if not handle it, (invalid password)
         if (!isMatched) { //password didn't match scenario
             done(null, false)
+            return
         }
 
         //thus success, valid credentials , pass the user object
